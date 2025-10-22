@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Dhuladhar River Cafe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --primary-light: #F7F5EB;
+            --secondary-light: #E8E4D6;
+            --accent-light: #A0C1B9;
+            --text-light: #5A5A5A;
+            --highlight-light: #706F6D;
+            
+            --primary-dark: #1A1A1A;
+            --secondary-dark: #2D2D2D;
+            --accent-dark: #4E9C8F;
+            --text-dark: #E0E0E0;
+            --highlight-dark: #AAAAAA;
+        }
+    
+        [data-theme="light"] {
+            --primary: var(--primary-light);
+            --secondary: var(--secondary-light);
+            --accent: var(--accent-light);
+            --text: var(--text-light);
+            --highlight: var(--highlight-light);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --text: var(--text-dark);
+            --highlight: var(--highlight-dark);
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-bg {
+            background-color: var(--primary);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-bg.scrolled {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-bg a {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-bg a:hover {
+            color: var(--accent) !important;
+        }
+
+        .nav-bg a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background-color: var(--accent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-bg a:hover::after {
+            width: 100%;
+        }
+
+        .page-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1551218808-94e220e084d2');
+            background-size: cover;
+            background-position: center;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .menu-card {
+            background-color: var(--secondary);
+            transition: all 0.3s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--primary);
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .theme-toggle {
+            background: var(--secondary);
+            border: none;
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .footer-bg {
+            background-color: var(--secondary);
+            transition: background-color 0.3s ease;
+        }
+
+        section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Mobile Navigation -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="absolute top-4 right-4 text-2xl" id="closeMenuBtn">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="index.html" class="text-2xl my-2" onclick="closeMobileMenu()">Home</a>
+        <a href="about.html" class="text-2xl my-2" onclick="closeMobileMenu()">About</a>
+        <a href="menu.html" class="text-2xl my-2" onclick="closeMobileMenu()">Menu</a>
+        <a href="gallery.html" class="text-2xl my-2" onclick="closeMobileMenu()">Gallery</a>
+        <a href="location.html" class="text-2xl my-2" onclick="closeMobileMenu()">Location</a>
+        <button class="theme-toggle mt-6" id="mobileThemeToggle">
+            <span id="mobileThemeIcon"><i class="fas fa-moon"></i></span>
+        </button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-bg shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-semibold" style="color: var(--text);">Dhuladhar River Cafe</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" style="color: var(--text);">Home</a>
+                    <a href="about.html" style="color: var(--text);">About</a>
+                    <a href="menu.html" style="color: var(--accent); font-weight: 600;">Menu</a>
+                    <a href="gallery.html" style="color: var(--text);">Gallery</a>
+                    <a href="location.html" style="color: var(--text);">Location</a>
+                    <button class="theme-toggle" id="themeToggle">
+                        <span id="themeIcon"><i class="fas fa-moon"></i></span>
+                    </button>
+                </div>
+                <div class="md:hidden flex items-center space-x-4">
+                    <button class="theme-toggle" id="mobileThemeBtn">
+                        <span id="mobileThemeBtnIcon"><i class="fas fa-moon"></i></span>
+                    </button>
+                    <button class="text-xl" id="openMenuBtn">
+                        <i class="fas fa-bars" style="color: var(--text);"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="px-4">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Our Menu</h1>
+            <p class="text-xl">Crafted with love, served with care</p>
+        </div>
+    </section>
+
+    <!-- Menu Content -->
+    <section class="py-16" style="background-color: var(--primary);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center mb-12 max-w-2xl mx-auto text-lg" style="color: var(--text);">Our seasonal menu features organic and locally sourced ingredients prepared with care and creativity. All dishes can be customized to accommodate dietary preferences.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Breakfast -->
+                <div class="menu-card rounded-lg overflow-hidden shadow-md">
+                    <div class="bg-amber-100 px-4 py-2 dark:bg-amber-900">
+                        <h3 class="text-xl font-semibold text-amber-800 dark:text-amber-100">Breakfast</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">River Sunrise Pancakes</h4>
+                                <span>₹320</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Fluffy pancakes with seasonal berries and local honey</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Mountain Omelette</h4>
+                                <span>₹280</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Farm fresh eggs with mushrooms, cheese, and herbs</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Granola Parfait</h4>
+                                <span>₹250</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Homemade granola with yogurt and fresh fruit</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Avocado Toast</h4>
+                                <span>₹340</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Sourdough bread with smashed avocado, poached egg, and microgreens</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">French Toast Special</h4>
+                                <span>₹310</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Brioche with cinnamon, maple syrup, and whipped cream</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lunch -->
+                <div class="menu-card rounded-lg overflow-hidden shadow-md">
+                    <div class="bg-green-100 px-4 py-2 dark:bg-green-900">
+                        <h3 class="text-xl font-semibold text-green-800 dark:text-green-100">Lunch</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Riverside Salad</h4>
+                                <span>₹350</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Fresh greens with roasted vegetables and house dressing</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Dhuladhar Thali</h4>
+                                <span>₹450</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Traditional platter with seasonal curries and breads</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Mountain Burger</h4>
+                                <span>₹380</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Grilled patty with locally sourced cheese and fixings</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Pasta Primavera</h4>
+                                <span>₹420</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Fresh pasta with garden vegetables in cream sauce</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Grilled Trout</h4>
+                                <span>₹550</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">River trout with lemon butter and seasonal sides</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Drinks -->
+                <div class="menu-card rounded-lg overflow-hidden shadow-md">
+                    <div class="bg-blue-100 px-4 py-2 dark:bg-blue-900">
+                        <h3 class="text-xl font-semibold text-blue-800 dark:text-blue-100">Drinks</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Himalayan Herbal Tea</h4>
+                                <span>₹180</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Locally foraged herbs with honey and lemon</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">River Breeze Lemonade</h4>
+                                <span>₹220</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Fresh lemonade with mint and Himalayan berries</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Highland Coffee</h4>
+                                <span>₹250</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Locally roasted beans with your choice of milk</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Fresh Fruit Smoothie</h4>
+                                <span>₹280</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Blended seasonal fruits with yogurt</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Masala Chai</h4>
+                                <span>₹150</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Traditional spiced tea with milk</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desserts -->
+                <div class="menu-card rounded-lg overflow-hidden shadow-md">
+                    <div class="bg-pink-100 px-4 py-2 dark:bg-pink-900">
+                        <h3 class="text-xl font-semibold text-pink-800 dark:text-pink-100">Desserts</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Chocolate Lava Cake</h4>
+                                <span>₹320</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Warm chocolate cake with vanilla ice cream</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Apple Pie</h4>
+                                <span>₹280</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Homemade pie with local apples and cinnamon</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Cheesecake</h4>
+                                <span>₹350</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Creamy cheesecake with berry compote</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Tiramisu</h4>
+                                <span>₹340</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Classic Italian dessert with coffee and mascarpone</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Seasonal Fruit Tart</h4>
+                                <span>₹300</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Fresh fruits on custard cream with pastry crust</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Snacks -->
+                <div class="menu-card rounded-lg overflow-hidden shadow-md">
+                    <div class="bg-orange-100 px-4 py-2 dark:bg-orange-900">
+                        <h3 class="text-xl font-semibold text-orange-800 dark:text-orange-100">Snacks</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">French Fries</h4>
+                                <span>₹180</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Crispy fries with house-made ketchup</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Nachos Supreme</h4>
+                                <span>₹320</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Tortilla chips with cheese, salsa, and guacamole</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Spring Rolls</h4>
+                                <span>₹250</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Crispy vegetable rolls with sweet chili sauce</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Bruschetta</h4>
+                                <span>₹280</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Toasted bread with tomatoes, basil, and olive oil</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Samosa Platter</h4>
+                                <span>₹220</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Crispy pastries with spiced potato filling</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Specials -->
+                <div class="menu-card rounded-lg overflow-hidden shadow-md">
+                    <div class="bg-purple-100 px-4 py-2 dark:bg-purple-900">
+                        <h3 class="text-xl font-semibold text-purple-800 dark:text-purple-100">Chef's Specials</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Riverside Platter</h4>
+                                <span>₹650</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Chef's selection of appetizers and mains for two</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Himalayan Fusion Bowl</h4>
+                                <span>₹480</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Quinoa, grilled vegetables, and tandoori protein</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Artisan Pizza</h4>
+                                <span>₹420</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Wood-fired pizza with seasonal toppings</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Pan-Seared Salmon</h4>
+                                <span>₹680</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Atlantic salmon with herb butter and roasted potatoes</p>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1" style="color: var(--text);">
+                                <h4 class="font-medium">Vegan Buddha Bowl</h4>
+                                <span>₹450</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--highlight);">Organic grains, roasted chickpeas, tahini dressing</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dietary Information -->
+            <div class="mt-16 p-8 rounded-lg" style="background-color: var(--secondary);">
+                <h3 class="text-2xl font-bold text-center mb-6" style="color: var(--text);">Dietary Information</h3>
+                <div class="grid md:grid-cols-3 gap-6 text-center">
+                    <div>
+                        <div class="text-4xl mb-2" style="color: var(--accent);">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h4 class="font-semibold mb-2" style="color: var(--text);">Vegetarian Options</h4>
+                        <p class="text-sm" style="color: var(--text);">Most dishes available in vegetarian versions</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-2" style="color: var(--accent);">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h4 class="font-semibold mb-2" style="color: var(--text);">Vegan Friendly</h4>
+                        <p class="text-sm" style="color: var(--text);">Plant-based alternatives available upon request</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-2" style="color: var(--accent);">
+                            <i class="fas fa-wheat-awn-circle-exclamation"></i>
+                        </div>
+                        <h4 class="font-semibold mb-2" style="color: var(--text);">Gluten-Free</h4>
+                        <p class="text-sm" style="color: var(--text);">Gluten-free bread and pasta options available</p>
+                    </div>
+                </div>
+                <p class="text-center mt-6 text-sm" style="color: var(--text);">Please inform our staff of any allergies or dietary restrictions. We'll be happy to accommodate your needs.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-bg py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-xl font-bold mb-4" style="color: var(--text);">Dhuladhar River Cafe</h3>
+                    <p class="mb-4" style="color: var(--text);">Serving delicious food with a riverside view since 2015.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="hover:text-accent transition" style="color: var(--text);">Home</a></li>
+                        <li><a href="about.html" class="hover:text-accent transition" style="color: var(--text);">About Us</a></li>
+                        <li><a href="menu.html" class="hover:text-accent transition" style="color: var(--text);">Menu</a></li>
+                        <li><a href="gallery.html" class="hover:text-accent transition" style="color: var(--text);">Gallery</a></li>
+                        <li><a href="location.html" class="hover:text-accent transition" style="color: var(--text);">Location</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Contact</h4>
+                    <address class="not-italic">
+                        <p class="mb-2" style="color: var(--text);">123 Riverside Road</p>
+                        <p class="mb-2" style="color: var(--text);">Mountain Valley, Himachal Pradesh 175123</p>
+                        <p class="mb-2" style="color: var(--text);">Phone: +91 98765 43210</p>
+                        <p style="color: var(--text);">Email: info@dhuladharrivercafe.com</p>
+                    </address>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Opening Hours</h4>
+                    <ul class="space-y-2">
+                        <li class="flex justify-between" style="color: var(--text);">
+                            <span>Monday - Friday:</span>
+                            <span>8:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between" style="color: var(--text);">
+                            <span>Saturday:</span>
+                            <span>8:00 AM - 10:00 PM</span>
+                        </li>
+                        <li class="flex justify-between" style="color: var(--text);">
+                            <span>Sunday:</span>
+                            <span>8:00 AM - 9:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t mt-8 pt-8 text-center text-sm" style="border-color: var(--secondary); color: var(--text);">
+                <p>© 2025 Dhuladhar River Cafe. All rights reserved.</p>
+                <p class="mt-2">Designed with love in the Himalayas</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="theme.js"></script>
+    <script src="enhancements.js"></script>
+    <script>
+        // Smooth scroll reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        // Navbar scroll effect
+        const navbar = document.querySelector('.nav-bg');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

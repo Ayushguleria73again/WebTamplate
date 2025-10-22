@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dhuladhar River Cafe</title>
+    <title>Dhuladhar River Cafe - Riverside Dining Experience</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -38,6 +38,10 @@
             --highlight: var(--highlight-dark);
         }
 
+        * {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             background-color: var(--primary);
@@ -49,7 +53,38 @@
 
         .nav-bg {
             background-color: var(--primary);
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-bg.scrolled {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: var(--primary);
+        }
+
+        .nav-bg a {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-bg a:hover {
+            color: var(--accent) !important;
+        }
+
+        .nav-bg a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background-color: var(--accent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-bg a:hover::after {
+            width: 100%;
         }
 
         .hero-image {
@@ -66,12 +101,50 @@
 
         .menu-card {
             background-color: var(--secondary);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .menu-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background-color: var(--highlight);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--accent);
+            padding: 10px 24px;
+            border-radius: 25px;
+            border: 2px solid var(--accent);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent);
+            color: white;
+            transform: translateY(-2px);
         }
 
         .slider-container {
@@ -242,6 +315,34 @@
                 height: 30vh;
             }
         }
+
+        /* Fade in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Section reveal on scroll */
+        section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body data-theme="light">
@@ -250,10 +351,11 @@
         <button class="absolute top-4 right-4 text-2xl" id="closeMenuBtn">
             <i class="fas fa-times"></i>
         </button>
-        <a href="#about" class="text-2xl my-2" onclick="closeMobileMenu()">About</a>
-        <a href="#menu" class="text-2xl my-2" onclick="closeMobileMenu()">Menu</a>
-        <a href="#gallery" class="text-2xl my-2" onclick="closeMobileMenu()">Gallery</a>
-        <a href="#location" class="text-2xl my-2" onclick="closeMobileMenu()">Location</a>
+        <a href="index.html" class="text-2xl my-2" onclick="closeMobileMenu()">Home</a>
+        <a href="about.html" class="text-2xl my-2" onclick="closeMobileMenu()">About</a>
+        <a href="menu.html" class="text-2xl my-2" onclick="closeMobileMenu()">Menu</a>
+        <a href="gallery.html" class="text-2xl my-2" onclick="closeMobileMenu()">Gallery</a>
+        <a href="location.html" class="text-2xl my-2" onclick="closeMobileMenu()">Location</a>
         <button class="theme-toggle mt-6" id="mobileThemeToggle">
             <span id="mobileThemeIcon"><i class="fas fa-moon"></i></span>
         </button>
@@ -267,10 +369,11 @@
                     <span class="text-xl font-semibold" style="color: var(--text);">Dhuladhar River Cafe</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#about" style="color: var(--text);">About</a>
-                    <a href="#menu" style="color: var(--text);">Menu</a>
-                    <a href="#gallery" style="color: var(--text);">Gallery</a>
-                    <a href="#location" style="color: var(--text);">Location</a>
+                    <a href="index.html" style="color: var(--text);">Home</a>
+                    <a href="about.html" style="color: var(--text);">About</a>
+                    <a href="menu.html" style="color: var(--text);">Menu</a>
+                    <a href="gallery.html" style="color: var(--text);">Gallery</a>
+                    <a href="location.html" style="color: var(--text);">Location</a>
                     <button class="theme-toggle" id="themeToggle">
                         <span id="themeIcon"><i class="fas fa-moon"></i></span>
                     </button>
@@ -291,36 +394,36 @@
     <section class="hero-image">
         <div class="px-4 py-16 sm:px-6 lg:px-8 w-full">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">Dhuladhar River Cafe</h1>
-            <p class="text-xl md:text-2xl mb-8">Where good food meets great atmosphere</p>
+            <p class="text-xl md:text-2xl mb-8">Where Nature Meets Culinary Excellence</p>
         </div>
     </section>
 
     <!-- Cafe Overview -->
     <section id="about" class="py-12 md:py-16" style="background-color: var(--secondary);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-8 md:mb-12" style="color: var(--text);">Our Story</h2>
+            <h2 class="text-3xl font-bold text-center mb-8 md:mb-12" style="color: var(--text);">About Us</h2>
             <div class="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
                 <div class="w-full md:w-1/2">
-                    <h3 class="text-2xl font-semibold mb-4" style="color: var(--text);">A Riverside Retreat</h3>
-                    <p class="mb-4" style="color: var(--text);">Nestled along the serene banks of the Dhuladhar River, our cafe offers a tranquil escape from the hustle and bustle of everyday life. Founded in 2015, we've been serving carefully crafted dishes using locally-sourced ingredients.</p>
-                    <p class="mb-6" style="color: var(--text);">Our philosophy is simple: great food, warm hospitality, and a connection to nature. The sound of the river and our signature dishes create an unforgettable experience for all our guests.</p>
+                    <h3 class="text-2xl font-semibold mb-4" style="color: var(--text);">A Riverside Paradise</h3>
+                    <p class="mb-4" style="color: var(--text);">Nestled beside the pristine waters flowing from the majestic Dhuladhar mountain range, our cafe offers a unique dining experience that combines breathtaking natural beauty with exceptional cuisine. Since 2015, we've been serving locals and travelers with authentic flavors and warm hospitality.</p>
+                    <p class="mb-6" style="color: var(--text);">Our philosophy is simple: fresh ingredients, traditional recipes with a modern twist, and an ambiance that lets you reconnect with nature. Whether you're seeking a peaceful morning coffee or a romantic dinner by the river, we create memorable moments.</p>
                     <div class="flex flex-wrap gap-4">
                         <div class="text-center p-3 rounded-lg shadow-sm min-w-[100px]" style="background-color: var(--primary); color: var(--text);">
-                            <div class="text-2xl font-bold">8+</div>
+                            <div class="text-2xl font-bold">10+</div>
                             <div>Years</div>
                         </div>
                         <div class="text-center p-3 rounded-lg shadow-sm min-w-[100px]" style="background-color: var(--primary); color: var(--text);">
                             <div class="text-2xl font-bold">50+</div>
-                            <div>Menu Items</div>
+                            <div>Dishes</div>
                         </div>
                         <div class="text-center p-3 rounded-lg shadow-sm min-w-[100px]" style="background-color: var(--primary); color: var(--text);">
-                            <div class="text-2xl font-bold">100%</div>
-                            <div>Locally Sourced</div>
+                            <div class="text-2xl font-bold">4.8★</div>
+                            <div>Rating</div>
                         </div>
                     </div>
                 </div>
                 <div class="w-full md:w-1/2 rounded-lg overflow-hidden shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5" alt="Cafe interior" class="w-full h-auto object-cover">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4" alt="Riverside cafe view" class="w-full h-auto object-cover">
                 </div>
             </div>
         </div>
@@ -329,100 +432,112 @@
     <!-- Special Menu Items -->
     <section id="menu" class="py-12 md:py-16" style="background-color: var(--primary);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-4" style="color: var(--text);">Menu Highlights</h2>
-            <p class="text-center mb-8 md:mb-12 max-w-2xl mx-auto" style="color: var(--text);">Our seasonal menu features organic and locally sourced ingredients prepared with care and creativity.</p>
+            <h2 class="text-3xl font-bold text-center mb-4" style="color: var(--text);">Our Signature Menu</h2>
+            <p class="text-center mb-8 md:mb-12 max-w-2xl mx-auto" style="color: var(--text);">Discover our carefully curated menu featuring local specialties and international favorites.</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Breakfast -->
+                <!-- Breakfast & Beverages -->
                 <div class="menu-card rounded-lg overflow-hidden shadow-md">
                     <div class="bg-amber-100 px-4 py-2 dark:bg-amber-900">
-                        <h3 class="text-xl font-semibold text-amber-800 dark:text-amber-100">Breakfast</h3>
+                        <h3 class="text-xl font-semibold text-amber-800 dark:text-amber-100">Breakfast & Beverages</h3>
                     </div>
                     <div class="p-4 md:p-6">
                         <div class="mb-4 md:mb-6">
                             <div class="flex justify-between mb-1" style="color: var(--text);">
-                                <h4 class="font-medium">River Sunrise Pancakes</h4>
-                                <span>₹320</span>
+                                <h4 class="font-medium">Himalayan Breakfast Platter</h4>
+                                <span class="font-semibold">₹350</span>
                             </div>
-                            <p class="text-sm" style="color: var(--highlight);">Fluffy pancakes with seasonal berries and local honey</p>
+                            <p class="text-sm" style="color: var(--highlight);">Fresh parathas, local honey, butter, and seasonal fruits</p>
                         </div>
                         <div class="mb-4 md:mb-6">
                             <div class="flex justify-between mb-1" style="color: var(--text);">
-                                <h4 class="font-medium">Mountain Omelette</h4>
-                                <span>₹280</span>
+                                <h4 class="font-medium">Artisan Coffee Selection</h4>
+                                <span class="font-semibold">₹180</span>
                             </div>
-                            <p class="text-sm" style="color: var(--highlight);">Farm fresh eggs with mushrooms, cheese, and herbs</p>
+                            <p class="text-sm" style="color: var(--highlight);">Locally roasted beans, expertly brewed to perfection</p>
                         </div>
                         <div class="mb-4 md:mb-6">
                             <div class="flex justify-between mb-1" style="color: var(--text);">
-                                <h4 class="font-medium">Granola Parfait</h4>
-                                <span>₹250</span>
+                                <h4 class="font-medium">Fresh Mountain Juice</h4>
+                                <span class="font-semibold">₹150</span>
                             </div>
-                            <p class="text-sm" style="color: var(--highlight);">Homemade granola with yogurt and fresh fruit</p>
+                            <p class="text-sm" style="color: var(--highlight);">Seasonal fruits pressed fresh to order</p>
                         </div>
+                    </div>
+                    <div class="p-4 border-t" style="border-color: var(--primary);">
+                        <a href="menu.html#breakfast" class="btn-primary w-full text-center block">View Full Menu</a>
                     </div>
                 </div>
                 
-                <!-- Lunch -->
+                <!-- Main Course -->
                 <div class="menu-card rounded-lg overflow-hidden shadow-md">
                     <div class="bg-green-100 px-4 py-2 dark:bg-green-900">
-                        <h3 class="text-xl font-semibold text-green-800 dark:text-green-100">Lunch</h3>
+                        <h3 class="text-xl font-semibold text-green-800 dark:text-green-100">Main Course</h3>
                     </div>
                     <div class="p-4 md:p-6">
                         <div class="mb-4 md:mb-6">
                             <div class="flex justify-between mb-1" style="color: var(--text);">
-                                <h4 class="font-medium">Riverside Salad</h4>
-                                <span>₹350</span>
+                                <h4 class="font-medium">Riverside Grilled Trout</h4>
+                                <span class="font-semibold">₹450</span>
                             </div>
-                            <p class="text-sm" style="color: var(--highlight);">Fresh greens with roasted vegetables and house dressing</p>
+                            <p class="text-sm" style="color: var(--highlight);">Fresh catch from local streams, herbs, lemon butter</p>
                         </div>
                         <div class="mb-4 md:mb-6">
                             <div class="flex justify-between mb-1" style="color: var(--text);">
-                                <h4 class="font-medium">Dhuladhar Thali</h4>
-                                <span>₹450</span>
+                                <h4 class="font-medium">Dhuladhar Special Thali</h4>
+                                <span class="font-semibold">₹380</span>
                             </div>
-                            <p class="text-sm" style="color: var(--highlight);">Traditional platter with seasonal curries and breads</p>
+                            <p class="text-sm" style="color: var(--highlight);">Traditional Himachali dal, rajma, rice, vegetables & bread</p>
                         </div>
                         <div class="mb-4 md:mb-6">
                             <div class="flex justify-between mb-1" style="color: var(--text);">
-                                <h4 class="font-medium">Mountain Burger</h4>
-                                <span>₹380</span>
+                                <h4 class="font-medium">Wood-Fired Pizza</h4>
+                                <span class="font-semibold">₹320</span>
                             </div>
-                            <p class="text-sm" style="color: var(--highlight);">Grilled patty with locally sourced cheese and fixings</p>
+                            <p class="text-sm" style="color: var(--highlight);">Artisan crust, organic toppings, mountain herbs</p>
                         </div>
+                    </div>
+                    <div class="p-4 border-t" style="border-color: var(--primary);">
+                        <a href="menu.html#mains" class="btn-primary w-full text-center block">View Full Menu</a>
                     </div>
                 </div>
                 
-                <!-- Drinks -->
+                <!-- Desserts & Snacks -->
                 <div class="menu-card rounded-lg overflow-hidden shadow-md">
                     <div class="bg-blue-100 px-4 py-2 dark:bg-blue-900">
-                        <h3 class="text-xl font-semibold text-blue-800 dark:text-blue-100">Drinks</h3>
+                        <h3 class="text-xl font-semibold text-blue-800 dark:text-blue-100">Desserts & Snacks</h3>
                     </div>
                     <div class="p-4 md:p-6">
                         <div class="mb-4 md:mb-6">
                             <div class="flex justify-between mb-1" style="color: var(--text);">
-                                <h4 class="font-medium">Himalayan Herbal Tea</h4>
-                                <span>₹180</span>
+                                <h4 class="font-medium">Apple Strudel</h4>
+                                <span class="font-semibold">₹200</span>
                             </div>
-                            <p class="text-sm" style="color: var(--highlight);">Locally foraged herbs with honey and lemon</p>
+                            <p class="text-sm" style="color: var(--highlight);">Made with local Himachali apples, vanilla ice cream</p>
                         </div>
                         <div class="mb-4 md:mb-6">
                             <div class="flex justify-between mb-1" style="color: var(--text);">
-                                <h4 class="font-medium">River Breeze Lemonade</h4>
-                                <span>₹220</span>
+                                <h4 class="font-medium">Momos Platter</h4>
+                                <span class="font-semibold">₹180</span>
                             </div>
-                            <p class="text-sm" style="color: var(--highlight);">Fresh lemonade with mint and Himalayan berries</p>
+                            <p class="text-sm" style="color: var(--highlight);">Steamed or fried, served with spicy chutney</p>
                         </div>
                         <div class="mb-4 md:mb-6">
                             <div class="flex justify-between mb-1" style="color: var(--text);">
-                                <h4 class="font-medium">Highland Coffee</h4>
-                                <span>₹250</span>
+                                <h4 class="font-medium">Chocolate Lava Cake</h4>
+                                <span class="font-semibold">₹220</span>
                             </div>
-                            <p class="text-sm" style="color: var(--highlight);">Locally roasted beans with your choice of milk</p>
+                            <p class="text-sm" style="color: var(--highlight);">Warm, gooey center with berry compote</p>
                         </div>
                     </div>
-                   
+                    <div class="p-4 border-t" style="border-color: var(--primary);">
+                        <a href="menu.html#desserts" class="btn-primary w-full text-center block">View Full Menu</a>
+                    </div>
                 </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <a href="menu.html" class="btn-secondary">Explore Complete Menu</a>
             </div>
         </div>
     </div>
@@ -459,6 +574,180 @@
             <span class="dot" data-index="2"></span>
             <span class="dot" data-index="3"></span>
             <span class="dot" data-index="4"></span>
+        </div>
+    </div>
+</section>
+
+<!-- Special Features Section -->
+<section id="features" class="py-12 md:py-16" style="background-color: var(--secondary);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-4" style="color: var(--text);">Why Choose Us?</h2>
+        <p class="text-center mb-8 md:mb-12 max-w-2xl mx-auto" style="color: var(--text);">Experience the perfect blend of nature, flavor, and hospitality.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="text-center p-6 rounded-lg" style="background-color: var(--primary);">
+                <div class="mb-4">
+                    <i class="fas fa-leaf text-4xl" style="color: var(--accent);"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2" style="color: var(--text);">Fresh Ingredients</h3>
+                <p style="color: var(--highlight);">Sourced daily from local farms and markets for the freshest flavors.</p>
+            </div>
+            
+            <div class="text-center p-6 rounded-lg" style="background-color: var(--primary);">
+                <div class="mb-4">
+                    <i class="fas fa-water text-4xl" style="color: var(--accent);"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2" style="color: var(--text);">Riverside Seating</h3>
+                <p style="color: var(--highlight);">Dine with stunning views of the crystal-clear mountain river.</p>
+            </div>
+            
+            <div class="text-center p-6 rounded-lg" style="background-color: var(--primary);">
+                <div class="mb-4">
+                    <i class="fas fa-utensils text-4xl" style="color: var(--accent);"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2" style="color: var(--text);">Expert Chefs</h3>
+                <p style="color: var(--highlight);">Trained culinary experts crafting authentic and fusion cuisine.</p>
+            </div>
+            
+            <div class="text-center p-6 rounded-lg" style="background-color: var(--primary);">
+                <div class="mb-4">
+                    <i class="fas fa-heart text-4xl" style="color: var(--accent);"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2" style="color: var(--text);">Warm Hospitality</h3>
+                <p style="color: var(--highlight);">Friendly service that makes every visit feel like coming home.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-12 md:py-16" style="background-color: var(--primary);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-4" style="color: var(--text);">What Our Guests Say</h2>
+        <p class="text-center mb-8 md:mb-12 max-w-2xl mx-auto" style="color: var(--text);">Read reviews from our happy visitors who experienced the magic of Dhuladhar River Cafe.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="menu-card rounded-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-xl" style="color: var(--accent);">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <p class="mb-4" style="color: var(--text);">"The most beautiful cafe I've ever visited! The riverside seating is absolutely magical, and the food is exceptional. Their grilled trout is a must-try!"</p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full mr-3 flex items-center justify-center text-white font-bold" style="background-color: var(--accent);">RK</div>
+                    <div>
+                        <h4 class="font-semibold" style="color: var(--text);">Rahul Kapoor</h4>
+                        <p class="text-sm" style="color: var(--highlight);">Delhi, India</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-card rounded-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-xl" style="color: var(--accent);">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <p class="mb-4" style="color: var(--text);">"Perfect spot for a peaceful morning coffee. The sound of the river, the mountain views, and the friendly staff create an unforgettable experience."</p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full mr-3 flex items-center justify-center text-white font-bold" style="background-color: var(--accent);">SP</div>
+                    <div>
+                        <h4 class="font-semibold" style="color: var(--text);">Priya Sharma</h4>
+                        <p class="text-sm" style="color: var(--highlight);">Mumbai, India</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-card rounded-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-xl" style="color: var(--accent);">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <p class="mb-4" style="color: var(--text);">"Authentic Himachali cuisine with a modern touch. The thali was delicious and the portions generous. The riverside ambiance is worth the visit alone!"</p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full mr-3 flex items-center justify-center text-white font-bold" style="background-color: var(--accent);">JM</div>
+                    <div>
+                        <h4 class="font-semibold" style="color: var(--text);">James Miller</h4>
+                        <p class="text-sm" style="color: var(--highlight);">Sydney, Australia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Events & Special Occasions -->
+<section id="events" class="py-12 md:py-16" style="background-color: var(--secondary);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-4" style="color: var(--text);">Special Events & Occasions</h2>
+        <p class="text-center mb-8 md:mb-12 max-w-2xl mx-auto" style="color: var(--text);">Host your special moments at our riverside paradise.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="menu-card rounded-lg overflow-hidden shadow-md">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed" alt="Wedding reception" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--text);">Weddings & Receptions</h3>
+                    <p class="mb-4" style="color: var(--text);">Create unforgettable memories with a riverside wedding. We offer customized packages for intimate ceremonies and grand celebrations.</p>
+                    <ul class="space-y-2" style="color: var(--highlight);">
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Capacity: Up to 100 guests</li>
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Customized menu options</li>
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Decoration services available</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="menu-card rounded-lg overflow-hidden shadow-md">
+                <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d" alt="Corporate events" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--text);">Corporate Events</h3>
+                    <p class="mb-4" style="color: var(--text);">Host team outings, meetings, or corporate retreats in our serene environment. Perfect for breaking away from the office.</p>
+                    <ul class="space-y-2" style="color: var(--highlight);">
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Wi-Fi and presentation facilities</li>
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Flexible seating arrangements</li>
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Catering packages available</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="menu-card rounded-lg overflow-hidden shadow-md">
+                <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3" alt="Birthday party" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--text);">Birthday Celebrations</h3>
+                    <p class="mb-4" style="color: var(--text);">Make birthdays extra special with our riverside setting. We arrange everything from cakes to decorations.</p>
+                    <ul class="space-y-2" style="color: var(--highlight);">
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Birthday cake arrangements</li>
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Special menu for kids</li>
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Fun activities available</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="menu-card rounded-lg overflow-hidden shadow-md">
+                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622" alt="Live music" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--text);">Live Music Evenings</h3>
+                    <p class="mb-4" style="color: var(--text);">Join us every Friday and Saturday evening for live acoustic performances by local artists.</p>
+                    <ul class="space-y-2" style="color: var(--highlight);">
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Every Friday & Saturday, 7 PM onwards</li>
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Free entry with dining</li>
+                        <li><i class="fas fa-check" style="color: var(--accent);"></i> Special evening menu</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -528,7 +817,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div class="mb-6 md:mb-0">
                 <h3 class="text-xl font-bold mb-4" style="color: var(--text);">Dhuladhar River Cafe</h3>
-                <p class="mb-4" style="color: var(--text);">Serving delicious food with a riverside view since 2015.</p>
+                <p class="mb-4" style="color: var(--text);">Where the mountains meet culinary excellence. Experience the perfect blend of nature and flavor since 2015.</p>
                 <div class="flex space-x-4">
                     <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-instagram"></i></a>
@@ -539,37 +828,42 @@
             <div>
                 <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Quick Links</h4>
                 <ul class="space-y-2">
-                    <li><a href="#about" class="hover:text-accent transition" style="color: var(--text);">About Us</a></li>
-                    <li><a href="#menu" class="hover:text-accent transition" style="color: var(--text);">Menu</a></li>
-                    <li><a href="#gallery" class="hover:text-accent transition" style="color: var(--text);">Gallery</a></li>
-                    <li><a href="#location" class="hover:text-accent transition" style="color: var(--text);">Location</a></li>
+                    <li><a href="index.html" class="hover:text-accent transition" style="color: var(--text);">Home</a></li>
+                    <li><a href="about.html" class="hover:text-accent transition" style="color: var(--text);">About Us</a></li>
+                    <li><a href="menu.html" class="hover:text-accent transition" style="color: var(--text);">Menu</a></li>
+                    <li><a href="gallery.html" class="hover:text-accent transition" style="color: var(--text);">Gallery</a></li>
+                    <li><a href="location.html" class="hover:text-accent transition" style="color: var(--text);">Location</a></li>
                 </ul>
             </div>
             
             <div>
                 <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Contact</h4>
                 <address class="not-italic">
-                    <p class="mb-2" style="color: var(--text);">123 Riverside Road</p>
-                    <p class="mb-2" style="color: var(--text);">Mountain Valley, Himachal Pradesh 175123</p>
-                    <p class="mb-2" style="color: var(--text);">Phone: +91 98765 43210</p>
-                    <p style="color: var(--text);">Email: info@dhuladharrivercafe.com</p>
+                    <p class="mb-2" style="color: var(--text);">Silicon Valley, CA</p>
+                    <p class="mb-2" style="color: var(--text);">United States</p>
+                    <p class="mb-2" style="color: var(--text);">Email: support@myonlinetools.com</p>
+                    <p style="color: var(--text);">Help: help@myonlinetools.com</p>
                 </address>
             </div>
             
             <div>
                 <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Opening Hours</h4>
                 <ul class="space-y-2">
-                    <li class="flex justify-between" style="color: var(--text);">
-                        <span>Monday - Friday:</span>
-                        <span>8:00 AM - 9:00 PM</span>
+                    <li style="color: var(--text);">
+                        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+                        <span class="ml-2">Monday - Sunday: 8:00 AM - 9:00 PM</span>
                     </li>
-                    <li class="flex justify-between" style="color: var(--text);">
-                        <span>Saturday:</span>
-                        <span>8:00 AM - 10:00 PM</span>
+                    <li style="color: var(--text);">
+                        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+                        <span class="ml-2">Breakfast: 8:00 AM - 11:00 AM</span>
                     </li>
-                    <li class="flex justify-between" style="color: var(--text);">
-                        <span>Sunday:</span>
-                        <span>8:00 AM - 9:00 PM</span>
+                    <li style="color: var(--text);">
+                        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+                        <span class="ml-2">Lunch: 12:00 PM - 3:00 PM</span>
+                    </li>
+                    <li style="color: var(--text);">
+                        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+                        <span class="ml-2">Dinner: 6:00 PM - 9:00 PM</span>
                     </li>
                 </ul>
             </div>
@@ -577,156 +871,81 @@
         
         <div class="border-t mt-8 pt-8 text-center text-sm" style="border-color: var(--secondary); color: var(--text);">
             <p>© 2025 Dhuladhar River Cafe. All rights reserved.</p>
-            <p class="mt-2">Designed with love in the Himalayas</p>
+            <p class="mt-2">Crafted with love in the lap of the Himalayas</p>
         </div>
     </div>
 </footer>
 
+<script src="slider.js"></script>
+<script src="theme.js"></script>
+<script src="enhancements.js"></script>
 <script>
-    // Theme Toggle Functionality
-    const themeToggle = document.getElementById('themeToggle');
-    const mobileThemeToggle = document.getElementById('mobileThemeToggle');
-    const mobileThemeBtn = document.getElementById('mobileThemeBtn');
-    const themeIcon = document.getElementById('themeIcon');
-    const mobileThemeIcon = document.getElementById('mobileThemeIcon');
-    const mobileThemeBtnIcon = document.getElementById('mobileThemeBtnIcon');
-    const body = document.body;
+    // Smooth scroll reveal animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
 
-    // Check for saved theme preference or use OS preference
-    const savedTheme = localStorage.getItem('theme') || 
-                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    body.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(savedTheme);
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
 
-    // Toggle theme
-    function toggleTheme() {
-        const currentTheme = body.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    // Observe all sections
+    document.addEventListener('DOMContentLoaded', () => {
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Add initial visibility to hero section
+        setTimeout(() => {
+            sections[0]?.classList.add('visible');
+        }, 100);
+    });
+
+    // Navbar scroll effect
+    let lastScroll = 0;
+    const navbar = document.querySelector('.nav-bg');
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
         
-        body.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateThemeIcon(newTheme);
-    }
-
-    // Update theme icon based on current theme
-    function updateThemeIcon(theme) {
-        if (theme === 'dark') {
-            themeIcon.innerHTML = '<i class="fas fa-sun"></i>';
-            mobileThemeIcon.innerHTML = '<i class="fas fa-sun"></i>';
-            mobileThemeBtnIcon.innerHTML = '<i class="fas fa-sun"></i>';
+        if (currentScroll > 50) {
+            navbar.classList.add('scrolled');
         } else {
-            themeIcon.innerHTML = '<i class="fas fa-moon"></i>';
-            mobileThemeIcon.innerHTML = '<i class="fas fa-moon"></i>';
-            mobileThemeBtnIcon.innerHTML = '<i class="fas fa-moon"></i>';
+            navbar.classList.remove('scrolled');
         }
-    }
-
-    // Event listeners for theme toggle buttons
-    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-    if (mobileThemeToggle) mobileThemeToggle.addEventListener('click', toggleTheme);
-    if (mobileThemeBtn) mobileThemeBtn.addEventListener('click', toggleTheme);
-
-    // Mobile Menu Functionality
-    const mobileMenu = document.getElementById('mobileMenu');
-    const openMenuBtn = document.getElementById('openMenuBtn');
-    const closeMenuBtn = document.getElementById('closeMenuBtn');
-    
-    openMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
-    
-    closeMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-        document.body.style.overflow = '';
-    });
-    
-    function closeMobileMenu() {
-        mobileMenu.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    
-    // Image slider functionality
-    const slider = document.getElementById('slider');
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.dot');
-    let currentSlide = 0;
-    const slideCount = slides.length;
-    
-    function goToSlide(index) {
-        if (index < 0) index = slideCount - 1;
-        if (index >= slideCount) index = 0;
         
-        currentSlide = index;
-        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-        
-        // Update dots
-        dots.forEach(dot => dot.classList.remove('active'));
-        dots[currentSlide].classList.add('active');
-    }
-    
-    // Next/previous buttons
-    document.querySelector('.next').addEventListener('click', () => {
-        goToSlide(currentSlide + 1);
+        lastScroll = currentScroll;
     });
-    
-    document.querySelector('.prev').addEventListener('click', () => {
-        goToSlide(currentSlide - 1);
-    });
-    
-    // Dot navigation
-    dots.forEach(dot => {
-        dot.addEventListener('click', () => {
-            const slideIndex = parseInt(dot.getAttribute('data-index'));
-            goToSlide(slideIndex);
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
         });
     });
-    
-    // Auto-advance slides
-    let slideInterval = setInterval(() => {
-        goToSlide(currentSlide + 1);
-    }, 5000);
-    
-    // Pause on hover
-    const sliderContainer = document.querySelector('.slider-container');
-    sliderContainer.addEventListener('mouseenter', () => {
-        clearInterval(slideInterval);
+
+    // Add hover effect to cards
+    document.querySelectorAll('.menu-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
     });
-    
-    sliderContainer.addEventListener('mouseleave', () => {
-        slideInterval = setInterval(() => {
-            goToSlide(currentSlide + 1);
-        }, 5000);
-    });
-    
-    // Mobile-friendly touch events
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-    sliderContainer.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        clearInterval(slideInterval);
-    }, {passive: true});
-    
-    sliderContainer.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-        slideInterval = setInterval(() => {
-            goToSlide(currentSlide + 1);
-        }, 5000);
-    }, {passive: true});
-    
-    function handleSwipe() {
-        if (touchEndX < touchStartX - 50) {
-            // Swipe left - next slide
-            goToSlide(currentSlide + 1);
-        }
-        
-        if (touchEndX > touchStartX + 50) {
-            // Swipe right - previous slide
-            goToSlide(currentSlide - 1);
-        }
-    }
 </script>
 </body>
 </html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Dhuladhar River Cafe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --primary-light: #F7F5EB;
+            --secondary-light: #E8E4D6;
+            --accent-light: #A0C1B9;
+            --text-light: #5A5A5A;
+            --highlight-light: #706F6D;
+            
+            --primary-dark: #1A1A1A;
+            --secondary-dark: #2D2D2D;
+            --accent-dark: #4E9C8F;
+            --text-dark: #E0E0E0;
+            --highlight-dark: #AAAAAA;
+        }
+    
+        [data-theme="light"] {
+            --primary: var(--primary-light);
+            --secondary: var(--secondary-light);
+            --accent: var(--accent-light);
+            --text: var(--text-light);
+            --highlight: var(--highlight-light);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --text: var(--text-dark);
+            --highlight: var(--highlight-dark);
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-bg {
+            background-color: var(--primary);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-bg.scrolled {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-bg a {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-bg a:hover {
+            color: var(--accent) !important;
+        }
+
+        .nav-bg a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background-color: var(--accent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-bg a:hover::after {
+            width: 100%;
+        }
+
+        .page-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5');
+            background-size: cover;
+            background-position: center;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--primary);
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .theme-toggle {
+            background: var(--secondary);
+            border: none;
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .footer-bg {
+            background-color: var(--secondary);
+            transition: background-color 0.3s ease;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--accent);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% + 10px);
+            background-color: var(--accent);
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Mobile Navigation -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="absolute top-4 right-4 text-2xl" id="closeMenuBtn">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="index.html" class="text-2xl my-2" onclick="closeMobileMenu()">Home</a>
+        <a href="about.html" class="text-2xl my-2" onclick="closeMobileMenu()">About</a>
+        <a href="menu.html" class="text-2xl my-2" onclick="closeMobileMenu()">Menu</a>
+        <a href="gallery.html" class="text-2xl my-2" onclick="closeMobileMenu()">Gallery</a>
+        <a href="location.html" class="text-2xl my-2" onclick="closeMobileMenu()">Location</a>
+        <button class="theme-toggle mt-6" id="mobileThemeToggle">
+            <span id="mobileThemeIcon"><i class="fas fa-moon"></i></span>
+        </button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-bg shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-semibold" style="color: var(--text);">Dhuladhar River Cafe</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" style="color: var(--text);">Home</a>
+                    <a href="about.html" style="color: var(--accent); font-weight: 600;">About</a>
+                    <a href="menu.html" style="color: var(--text);">Menu</a>
+                    <a href="gallery.html" style="color: var(--text);">Gallery</a>
+                    <a href="location.html" style="color: var(--text);">Location</a>
+                    <button class="theme-toggle" id="themeToggle">
+                        <span id="themeIcon"><i class="fas fa-moon"></i></span>
+                    </button>
+                </div>
+                <div class="md:hidden flex items-center space-x-4">
+                    <button class="theme-toggle" id="mobileThemeBtn">
+                        <span id="mobileThemeBtnIcon"><i class="fas fa-moon"></i></span>
+                    </button>
+                    <button class="text-xl" id="openMenuBtn">
+                        <i class="fas fa-bars" style="color: var(--text);"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="px-4">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Our Story</h1>
+            <p class="text-xl">Discover the journey of Dhuladhar River Cafe</p>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="py-16" style="background-color: var(--secondary);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row gap-12 items-center mb-16">
+                <div class="w-full md:w-1/2">
+                    <h3 class="text-2xl font-semibold mb-4" style="color: var(--text);">A Riverside Retreat</h3>
+                    <p class="mb-4" style="color: var(--text);">Nestled along the serene banks of the Dhuladhar River, our cafe offers a tranquil escape from the hustle and bustle of everyday life. Founded in 2015, we've been serving carefully crafted dishes using locally-sourced ingredients.</p>
+                    <p class="mb-6" style="color: var(--text);">Our philosophy is simple: great food, warm hospitality, and a connection to nature. The sound of the river and our signature dishes create an unforgettable experience for all our guests.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="text-center p-3 rounded-lg shadow-sm min-w-[100px]" style="background-color: var(--primary); color: var(--text);">
+                            <div class="text-2xl font-bold">8+</div>
+                            <div>Years</div>
+                        </div>
+                        <div class="text-center p-3 rounded-lg shadow-sm min-w-[100px]" style="background-color: var(--primary); color: var(--text);">
+                            <div class="text-2xl font-bold">50+</div>
+                            <div>Menu Items</div>
+                        </div>
+                        <div class="text-center p-3 rounded-lg shadow-sm min-w-[100px]" style="background-color: var(--primary); color: var(--text);">
+                            <div class="text-2xl font-bold">100%</div>
+                            <div>Locally Sourced</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5" alt="Cafe interior" class="w-full h-auto object-cover">
+                </div>
+            </div>
+
+            <!-- Mission & Vision -->
+            <div class="grid md:grid-cols-2 gap-8 mb-16">
+                <div class="p-8 rounded-lg" style="background-color: var(--primary);">
+                    <div class="text-4xl mb-4" style="color: var(--accent);">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4" style="color: var(--text);">Our Mission</h3>
+                    <p style="color: var(--text);">To provide our guests with exceptional dining experiences that celebrate local flavors, sustainable practices, and the natural beauty of our riverside location. We believe in creating moments that nourish both body and soul.</p>
+                </div>
+                <div class="p-8 rounded-lg" style="background-color: var(--primary);">
+                    <div class="text-4xl mb-4" style="color: var(--accent);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4" style="color: var(--text);">Our Vision</h3>
+                    <p style="color: var(--text);">To become the premier destination for travelers and locals seeking authentic cuisine, peaceful ambiance, and a genuine connection to the Himalayan landscape. We aim to set the standard for sustainable, community-focused dining.</p>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="mb-16">
+                <h3 class="text-3xl font-bold text-center mb-12" style="color: var(--text);">Our Journey</h3>
+                <div class="max-w-3xl mx-auto">
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-semibold mb-2" style="color: var(--text);">2015 - The Beginning</h4>
+                        <p style="color: var(--text);">Dhuladhar River Cafe opened its doors with a vision to create a unique riverside dining experience. Started by passionate food lovers who fell in love with this beautiful location.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-semibold mb-2" style="color: var(--text);">2017 - Expansion</h4>
+                        <p style="color: var(--text);">Added outdoor seating area to accommodate growing number of guests and to provide better river views. Introduced our signature Dhuladhar Thali.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-semibold mb-2" style="color: var(--text);">2019 - Award Recognition</h4>
+                        <p style="color: var(--text);">Received "Best Riverside Cafe" award from Himachal Tourism Board. Featured in multiple travel magazines and food blogs.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-semibold mb-2" style="color: var(--text);">2021 - Sustainability Initiative</h4>
+                        <p style="color: var(--text);">Launched our zero-waste kitchen program and partnered with local farmers for 100% organic produce. Installed solar panels for clean energy.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-semibold mb-2" style="color: var(--text);">2023 - Present</h4>
+                        <p style="color: var(--text);">Continuing to serve the community with love, expanding our menu with seasonal specials, and maintaining our commitment to sustainability and excellence.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Values -->
+            <div>
+                <h3 class="text-3xl font-bold text-center mb-12" style="color: var(--text);">Our Values</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center p-6">
+                        <div class="text-5xl mb-4" style="color: var(--accent);">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-3" style="color: var(--text);">Sustainability</h4>
+                        <p style="color: var(--text);">We're committed to eco-friendly practices, from sourcing to serving, ensuring minimal environmental impact.</p>
+                    </div>
+                    <div class="text-center p-6">
+                        <div class="text-5xl mb-4" style="color: var(--accent);">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-3" style="color: var(--text);">Community</h4>
+                        <p style="color: var(--text);">Supporting local farmers and artisans is at the heart of everything we do. We believe in growing together.</p>
+                    </div>
+                    <div class="text-center p-6">
+                        <div class="text-5xl mb-4" style="color: var(--accent);">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-3" style="color: var(--text);">Quality</h4>
+                        <p style="color: var(--text);">Every dish is prepared with care, using the finest ingredients and traditional cooking methods passed down through generations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-bg py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-xl font-bold mb-4" style="color: var(--text);">Dhuladhar River Cafe</h3>
+                    <p class="mb-4" style="color: var(--text);">Serving delicious food with a riverside view since 2015.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="hover:text-accent transition" style="color: var(--text);">Home</a></li>
+                        <li><a href="about.html" class="hover:text-accent transition" style="color: var(--text);">About Us</a></li>
+                        <li><a href="menu.html" class="hover:text-accent transition" style="color: var(--text);">Menu</a></li>
+                        <li><a href="gallery.html" class="hover:text-accent transition" style="color: var(--text);">Gallery</a></li>
+                        <li><a href="location.html" class="hover:text-accent transition" style="color: var(--text);">Location</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Contact</h4>
+                    <address class="not-italic">
+                        <p class="mb-2" style="color: var(--text);">123 Riverside Road</p>
+                        <p class="mb-2" style="color: var(--text);">Mountain Valley, Himachal Pradesh 175123</p>
+                        <p class="mb-2" style="color: var(--text);">Phone: +91 98765 43210</p>
+                        <p style="color: var(--text);">Email: info@dhuladharrivercafe.com</p>
+                    </address>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Opening Hours</h4>
+                    <ul class="space-y-2">
+                        <li class="flex justify-between" style="color: var(--text);">
+                            <span>Monday - Friday:</span>
+                            <span>8:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between" style="color: var(--text);">
+                            <span>Saturday:</span>
+                            <span>8:00 AM - 10:00 PM</span>
+                        </li>
+                        <li class="flex justify-between" style="color: var(--text);">
+                            <span>Sunday:</span>
+                            <span>8:00 AM - 9:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t mt-8 pt-8 text-center text-sm" style="border-color: var(--secondary); color: var(--text);">
+                <p>© 2025 Dhuladhar River Cafe. All rights reserved.</p>
+                <p class="mt-2">Designed with love in the Himalayas</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="theme.js"></script>
+    <script src="enhancements.js"></script>
+    <script>
+        // Smooth scroll reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        // Navbar scroll effect
+        const navbar = document.querySelector('.nav-bg');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

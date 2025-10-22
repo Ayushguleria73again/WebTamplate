@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location - Dhuladhar River Cafe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --primary-light: #F7F5EB;
+            --secondary-light: #E8E4D6;
+            --accent-light: #A0C1B9;
+            --text-light: #5A5A5A;
+            --highlight-light: #706F6D;
+            
+            --primary-dark: #1A1A1A;
+            --secondary-dark: #2D2D2D;
+            --accent-dark: #4E9C8F;
+            --text-dark: #E0E0E0;
+            --highlight-dark: #AAAAAA;
+        }
+    
+        [data-theme="light"] {
+            --primary: var(--primary-light);
+            --secondary: var(--secondary-light);
+            --accent: var(--accent-light);
+            --text: var(--text-light);
+            --highlight: var(--highlight-light);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --text: var(--text-dark);
+            --highlight: var(--highlight-dark);
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-bg {
+            background-color: var(--primary);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-bg.scrolled {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-bg a {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-bg a:hover {
+            color: var(--accent) !important;
+        }
+
+        .nav-bg a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background-color: var(--accent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-bg a:hover::after {
+            width: 100%;
+        }
+
+        .page-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1470337458703-46ad1756a187');
+            background-size: cover;
+            background-position: center;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--primary);
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .theme-toggle {
+            background: var(--secondary);
+            border: none;
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .footer-bg {
+            background-color: var(--secondary);
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-card {
+            background-color: var(--secondary);
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Mobile Navigation -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="absolute top-4 right-4 text-2xl" id="closeMenuBtn">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="index.html" class="text-2xl my-2" onclick="closeMobileMenu()">Home</a>
+        <a href="about.html" class="text-2xl my-2" onclick="closeMobileMenu()">About</a>
+        <a href="menu.html" class="text-2xl my-2" onclick="closeMobileMenu()">Menu</a>
+        <a href="gallery.html" class="text-2xl my-2" onclick="closeMobileMenu()">Gallery</a>
+        <a href="location.html" class="text-2xl my-2" onclick="closeMobileMenu()">Location</a>
+        <button class="theme-toggle mt-6" id="mobileThemeToggle">
+            <span id="mobileThemeIcon"><i class="fas fa-moon"></i></span>
+        </button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-bg shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-semibold" style="color: var(--text);">Dhuladhar River Cafe</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" style="color: var(--text);">Home</a>
+                    <a href="about.html" style="color: var(--text);">About</a>
+                    <a href="menu.html" style="color: var(--text);">Menu</a>
+                    <a href="gallery.html" style="color: var(--text);">Gallery</a>
+                    <a href="location.html" style="color: var(--accent); font-weight: 600;">Location</a>
+                    <button class="theme-toggle" id="themeToggle">
+                        <span id="themeIcon"><i class="fas fa-moon"></i></span>
+                    </button>
+                </div>
+                <div class="md:hidden flex items-center space-x-4">
+                    <button class="theme-toggle" id="mobileThemeBtn">
+                        <span id="mobileThemeBtnIcon"><i class="fas fa-moon"></i></span>
+                    </button>
+                    <button class="text-xl" id="openMenuBtn">
+                        <i class="fas fa-bars" style="color: var(--text);"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="px-4">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Find Us</h1>
+            <p class="text-xl">Visit us by the riverside</p>
+        </div>
+    </section>
+
+    <!-- Location Map -->
+    <section class="py-16" style="background-color: var(--secondary);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row gap-12">
+                <div class="w-full md:w-1/2">
+                    <h3 class="text-2xl font-semibold mb-6" style="color: var(--text);">Visit Our Riverside Cafe</h3>
+                    <address class="not-italic mb-8">
+                        <div class="flex items-start mb-6">
+                            <i class="fas fa-map-marker-alt mt-1 mr-4 text-2xl" style="color: var(--accent);"></i>
+                            <div>
+                                <p class="font-medium text-lg mb-1" style="color: var(--text);">Address:</p>
+                                <p style="color: var(--text);">123 Riverside Road, Near Dhuladhar Bridge<br>Mountain Valley, Himachal Pradesh 175123</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start mb-6">
+                            <i class="fas fa-phone-alt mr-4 text-2xl" style="color: var(--accent);"></i>
+                            <div>
+                                <p class="font-medium text-lg mb-1" style="color: var(--text);">Phone:</p>
+                                <p style="color: var(--text);">+91 98765 43210</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start mb-6">
+                            <i class="fas fa-envelope mr-4 text-2xl" style="color: var(--accent);"></i>
+                            <div>
+                                <p class="font-medium text-lg mb-1" style="color: var(--text);">Email:</p>
+                                <p style="color: var(--text);">info@dhuladharrivercafe.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start mb-6">
+                            <i class="fas fa-clock mr-4 text-2xl" style="color: var(--accent);"></i>
+                            <div>
+                                <p class="font-medium text-lg mb-1" style="color: var(--text);">Opening Hours:</p>
+                                <p style="color: var(--text);">Monday - Friday: 8:00 AM - 9:00 PM<br>Saturday: 8:00 AM - 10:00 PM<br>Sunday: 8:00 AM - 9:00 PM</p>
+                            </div>
+                        </div>
+                    </address>
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3 text-lg" style="color: var(--text);">Parking Available:</h4>
+                        <p style="color: var(--text);">Free parking is available for our guests in the nearby lot. Easy access from the main road.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3 text-lg" style="color: var(--text);">Follow Us:</h4>
+                        <div class="flex space-x-4 text-2xl">
+                            <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 rounded-lg overflow-hidden shadow-lg" style="background-color: var(--secondary);">
+                    <!-- Embedded Google Map -->
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13504.714156683234!2d76.3203693!3d32.20719045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391b5220a5b7d3f3%3A0x279f7b287422d723!2sDharamshala%2C%20Himachal%20Pradesh!5e0!3m2!1sen!2sin!4v1687859898458!5m2!1sen!2sin" 
+                        width="100%" 
+                        height="100%" 
+                        style="min-height: 400px; border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        class="min-h-[400px] md:min-h-full">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Reach -->
+    <section class="py-16" style="background-color: var(--primary);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12" style="color: var(--text);">How to Reach Us</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="contact-card p-8 rounded-lg text-center">
+                    <div class="text-5xl mb-4" style="color: var(--accent);">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3" style="color: var(--text);">By Car</h3>
+                    <p style="color: var(--text);">Take the main highway towards Dharamshala. Exit at Dhuladhar Bridge and follow signs for Riverside Road. Free parking available.</p>
+                    <p class="mt-4 font-semibold" style="color: var(--accent);">~ 30 min from city center</p>
+                </div>
+
+                <div class="contact-card p-8 rounded-lg text-center">
+                    <div class="text-5xl mb-4" style="color: var(--accent);">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3" style="color: var(--text);">By Bus</h3>
+                    <p style="color: var(--text);">Take bus route 12 or 15 from the main bus terminal. Get off at Dhuladhar Bridge stop and walk 5 minutes along the river path.</p>
+                    <p class="mt-4 font-semibold" style="color: var(--accent);">~ 45 min from bus terminal</p>
+                </div>
+
+                <div class="contact-card p-8 rounded-lg text-center">
+                    <div class="text-5xl mb-4" style="color: var(--accent);">
+                        <i class="fas fa-taxi"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3" style="color: var(--text);">By Taxi</h3>
+                    <p style="color: var(--text);">Easily accessible by local taxis and ride-sharing apps. Simply enter "Dhuladhar River Cafe" as your destination.</p>
+                    <p class="mt-4 font-semibold" style="color: var(--accent);">Available 24/7</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Reservation Form -->
+    <section class="py-16" style="background-color: var(--secondary);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-4" style="color: var(--text);">Contact Us & Make a Reservation</h2>
+            <p class="text-center mb-12" style="color: var(--text);">Have a question or want to reserve a table? We're here to help!</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Contact Form -->
+                <div class="p-8 rounded-lg" style="background-color: var(--primary);">
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center" style="color: var(--text);">
+                        <i class="fas fa-envelope mr-3" style="color: var(--accent);"></i>
+                        Send Us a Message
+                    </h3>
+                    <form id="contactForm" class="space-y-4">
+                        <div>
+                            <label for="contact-name" class="block mb-2 font-medium" style="color: var(--text);">Name *</label>
+                            <input 
+                                type="text" 
+                                id="contact-name" 
+                                name="name" 
+                                required
+                                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);"
+                                placeholder="Your name">
+                        </div>
+                        <div>
+                            <label for="contact-email" class="block mb-2 font-medium" style="color: var(--text);">Email *</label>
+                            <input 
+                                type="email" 
+                                id="contact-email" 
+                                name="email" 
+                                required
+                                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);"
+                                placeholder="your@email.com">
+                        </div>
+                        <div>
+                            <label for="contact-phone" class="block mb-2 font-medium" style="color: var(--text);">Phone</label>
+                            <input 
+                                type="tel" 
+                                id="contact-phone" 
+                                name="phone"
+                                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);"
+                                placeholder="+91 98765 43210">
+                        </div>
+                        <div>
+                            <label for="contact-message" class="block mb-2 font-medium" style="color: var(--text);">Message *</label>
+                            <textarea 
+                                id="contact-message" 
+                                name="message" 
+                                rows="5" 
+                                required
+                                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);"
+                                placeholder="How can we help you?"></textarea>
+                        </div>
+                        <button 
+                            type="submit"
+                            class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all hover:opacity-90 hover:transform hover:-translate-y-1"
+                            style="background-color: var(--accent);">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            Send Message
+                        </button>
+                    </form>
+                    <div id="contactSuccess" class="hidden mt-4 p-4 rounded-lg" style="background-color: #d4edda; color: #155724;">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        Thank you! We'll get back to you soon.
+                    </div>
+                </div>
+
+                <!-- Reservation Form -->
+                <div class="p-8 rounded-lg" style="background-color: var(--primary);">
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center" style="color: var(--text);">
+                        <i class="fas fa-calendar-check mr-3" style="color: var(--accent);"></i>
+                        Reserve a Table
+                    </h3>
+                    <form id="reservationForm" class="space-y-4">
+                        <div>
+                            <label for="res-name" class="block mb-2 font-medium" style="color: var(--text);">Name *</label>
+                            <input 
+                                type="text" 
+                                id="res-name" 
+                                name="name" 
+                                required
+                                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);"
+                                placeholder="Your name">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="res-email" class="block mb-2 font-medium" style="color: var(--text);">Email *</label>
+                                <input 
+                                    type="email" 
+                                    id="res-email" 
+                                    name="email" 
+                                    required
+                                    class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                    style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);"
+                                    placeholder="your@email.com">
+                            </div>
+                            <div>
+                                <label for="res-phone" class="block mb-2 font-medium" style="color: var(--text);">Phone *</label>
+                                <input 
+                                    type="tel" 
+                                    id="res-phone" 
+                                    name="phone"
+                                    required
+                                    class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                    style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);"
+                                    placeholder="+91 98765 43210">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="res-date" class="block mb-2 font-medium" style="color: var(--text);">Date *</label>
+                                <input 
+                                    type="date" 
+                                    id="res-date" 
+                                    name="date" 
+                                    required
+                                    class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                    style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);">
+                            </div>
+                            <div>
+                                <label for="res-time" class="block mb-2 font-medium" style="color: var(--text);">Time *</label>
+                                <select 
+                                    id="res-time" 
+                                    name="time" 
+                                    required
+                                    class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                    style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);">
+                                    <option value="">Select time</option>
+                                    <option value="08:00">8:00 AM</option>
+                                    <option value="09:00">9:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="13:00">1:00 PM</option>
+                                    <option value="14:00">2:00 PM</option>
+                                    <option value="15:00">3:00 PM</option>
+                                    <option value="16:00">4:00 PM</option>
+                                    <option value="17:00">5:00 PM</option>
+                                    <option value="18:00">6:00 PM</option>
+                                    <option value="19:00">7:00 PM</option>
+                                    <option value="20:00">8:00 PM</option>
+                                    <option value="21:00">9:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="res-guests" class="block mb-2 font-medium" style="color: var(--text);">Number of Guests *</label>
+                                <select 
+                                    id="res-guests" 
+                                    name="guests" 
+                                    required
+                                    class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                    style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);">
+                                    <option value="">Select guests</option>
+                                    <option value="1">1 Guest</option>
+                                    <option value="2">2 Guests</option>
+                                    <option value="3">3 Guests</option>
+                                    <option value="4">4 Guests</option>
+                                    <option value="5">5 Guests</option>
+                                    <option value="6">6 Guests</option>
+                                    <option value="7-10">7-10 Guests</option>
+                                    <option value="10+">10+ Guests (Group)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="res-seating" class="block mb-2 font-medium" style="color: var(--text);">Seating Preference</label>
+                                <select 
+                                    id="res-seating" 
+                                    name="seating"
+                                    class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                    style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);">
+                                    <option value="any">Any</option>
+                                    <option value="riverside">Riverside View</option>
+                                    <option value="indoor">Indoor</option>
+                                    <option value="outdoor">Outdoor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="res-notes" class="block mb-2 font-medium" style="color: var(--text);">Special Requests</label>
+                            <textarea 
+                                id="res-notes" 
+                                name="notes" 
+                                rows="3"
+                                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                                style="background-color: var(--secondary); color: var(--text); border-color: var(--accent);"
+                                placeholder="Any special occasions or dietary requirements?"></textarea>
+                        </div>
+                        <button 
+                            type="submit"
+                            class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all hover:opacity-90 hover:transform hover:-translate-y-1"
+                            style="background-color: var(--accent);">
+                            <i class="fas fa-utensils mr-2"></i>
+                            Reserve Table
+                        </button>
+                    </form>
+                    <div id="reservationSuccess" class="hidden mt-4 p-4 rounded-lg" style="background-color: #d4edda; color: #155724;">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        Reservation received! We'll confirm shortly.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-bg py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-xl font-bold mb-4" style="color: var(--text);">Dhuladhar River Cafe</h3>
+                    <p class="mb-4" style="color: var(--text);">Serving delicious food with a riverside view since 2015.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="hover:text-accent transition" style="color: var(--text);"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="hover:text-accent transition" style="color: var(--text);">Home</a></li>
+                        <li><a href="about.html" class="hover:text-accent transition" style="color: var(--text);">About Us</a></li>
+                        <li><a href="menu.html" class="hover:text-accent transition" style="color: var(--text);">Menu</a></li>
+                        <li><a href="gallery.html" class="hover:text-accent transition" style="color: var(--text);">Gallery</a></li>
+                        <li><a href="location.html" class="hover:text-accent transition" style="color: var(--text);">Location</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Contact</h4>
+                    <address class="not-italic">
+                        <p class="mb-2" style="color: var(--text);">123 Riverside Road</p>
+                        <p class="mb-2" style="color: var(--text);">Mountain Valley, Himachal Pradesh 175123</p>
+                        <p class="mb-2" style="color: var(--text);">Phone: +91 98765 43210</p>
+                        <p style="color: var(--text);">Email: info@dhuladharrivercafe.com</p>
+                    </address>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--text);">Opening Hours</h4>
+                    <ul class="space-y-2">
+                        <li class="flex justify-between" style="color: var(--text);">
+                            <span>Monday - Friday:</span>
+                            <span>8:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between" style="color: var(--text);">
+                            <span>Saturday:</span>
+                            <span>8:00 AM - 10:00 PM</span>
+                        </li>
+                        <li class="flex justify-between" style="color: var(--text);">
+                            <span>Sunday:</span>
+                            <span>8:00 AM - 9:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t mt-8 pt-8 text-center text-sm" style="border-color: var(--secondary); color: var(--text);">
+                <p>© 2025 Dhuladhar River Cafe. All rights reserved.</p>
+                <p class="mt-2">Designed with love in the Himalayas</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="theme.js"></script>
+    <script src="enhancements.js"></script>
+    <script>
+        // Smooth scroll reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Set minimum date to today for reservation
+            const dateInput = document.getElementById('res-date');
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('min', today);
+        });
+
+        // Navbar scroll effect
+        const navbar = document.querySelector('.nav-bg');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Contact Form Handler
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Log to console (in production, send to server)
+            console.log('Contact Form Submission:', data);
+            
+            // Show success message
+            document.getElementById('contactSuccess').classList.remove('hidden');
+            
+            // Reset form
+            this.reset();
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('contactSuccess').classList.add('hidden');
+            }, 5000);
+        });
+
+        // Reservation Form Handler
+        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Log to console (in production, send to server)
+            console.log('Reservation Form Submission:', data);
+            
+            // Show success message
+            document.getElementById('reservationSuccess').classList.remove('hidden');
+            
+            // Reset form
+            this.reset();
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('reservationSuccess').classList.add('hidden');
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
